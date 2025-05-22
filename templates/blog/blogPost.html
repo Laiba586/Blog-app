@@ -1,0 +1,70 @@
+{%extends 'base.html'%} 
+{%block title%} Blog {%endblock%} 
+{%block body%}
+
+<div class="container my-3">
+  <div class="blog-post">
+    <a href="#">Article by: {{post.author}}</a>
+    <h2 class="blog-post-title">{{post.title}}</h2>
+    <p class="blog-post-meta">{{post.timestamp}}</p>
+    <p>{{post.content}}</p>
+  </div>
+  <div class="container">
+    <h2>Comments({{comments.count}})</h2>
+    <form action="/blog/postcomment" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="comment">Post Comment </label>
+        <input type="text" class="form-control my-2"  name="comment"  placeholder="Enter comment here" />
+        
+      </div>
+      <input type="hidden" name="postsno" value="{{post.sno}}" />
+      <button type="submit" class="btn btn-primary my-2">Submit</button>
+    </form>
+    {% for comment in comments %}
+    <div class="row my-3">
+      <div class="col-md-1">
+        <img
+          class="rounded mx-auto d-block w-100 p-2"
+          src="/static/download.png"
+          alt="user"
+        />
+      </div>
+      <div class="col-md-11">
+        <b> {{comment.user.username}} </b> at {{ comment.timestamp }}
+        <div>{{comment.comment}}</div>
+        <div class="reply mx-0 my-2">
+
+  <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#replybox{{comment.sno}}" aria-expanded="false" aria-controls="replybox{{comment.sno}}">
+    Reply
+  </button>
+
+<div class="collapse" id="replybox{{comment.sno}}">
+  <div class="card card-body my-2">
+  
+ 
+
+<form action="/blog/postcomment" method="post">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="comment">Post a reply </label>
+    <input type="text" class="form-control my-2"  name="reply" />
+    <input type="hidden" class="form-control my-2"  name="comment" value="{{comment.sno}}" />
+
+
+    
+  </div>
+  <input type="hidden" name="postsno" value="{{post.sno}}" />
+  <button type="submit" class="btn btn-primary my-2">Submit</button>
+</form>
+</div> 
+</div>        
+          
+        </div>
+       
+
+      </div>
+      {% endfor %} {%endblock%}
+    </div>
+  </div>
+</div>
